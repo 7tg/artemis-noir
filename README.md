@@ -1,3 +1,22 @@
+# Artemis Noir (7tg fork)
+
+This is a personal fork of [ClassicOldSong's Artemis](https://github.com/ClassicOldSong/moonlight-android) (`moonlight-noir` branch) that stays current while upstream Artemis releases are paused.
+
+**What's different from the last official Artemis release (v20.2.6):**
+
+- All unreleased Artemis development from the `moonlight-noir` branch
+- Upstream [Moonlight v12.2](https://github.com/moonlight-stream/moonlight-android/releases/tag/v12.2) merged in: Android 16.1 native keyboard capture, controller LED crash/ANR fixes, libopus 1.6.1 + OpenSSL 4.0.2, OkHttp 5.5, jmDNS 3.6.3 with desugaring fix, new translations
+- **Touchpad rotation fix** (Settings → Input → Touchpad rotation fix): corrects touchpads that move the cursor at a right angle to your finger, such as Samsung Book Cover Keyboards on Galaxy Tab S tablets. Fixes cursor motion, two-finger scrolling, and flick momentum. Use **Auto (follow screen rotation)**; if your device rotates the other way, pick 90°/180°/270° manually (Tab S9: 270°). Addresses [moonlight-android#1028](https://github.com/moonlight-stream/moonlight-android/issues/1028) and [#1240](https://github.com/moonlight-stream/moonlight-android/issues/1240).
+
+## Install with Obtainium
+
+1. In [Obtainium](https://github.com/ImranR98/Obtainium), add an app with the URL: `https://github.com/7tg/artemis-noir`
+2. Install the `artemis-nonRoot_game-release.apk` release asset (arm64-v8a, app id `com.limelight.noir`)
+
+Releases are signed with this fork's own key, so if you have official Artemis installed you must uninstall it once before the first install. Updates within this fork then work normally through Obtainium.
+
+---
+
 # Artemis Android
 
 Previously named Moonlight Noir
