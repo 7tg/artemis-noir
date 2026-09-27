@@ -18,7 +18,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.Shadows;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.junit.BeforeClass;
@@ -46,7 +45,7 @@ public class ProfilesNavigationTest {
                 .commit();
 
         // Provide fake GameManager service to avoid ServiceNotFoundException
-        org.robolectric.shadows.ShadowApplication shadowApp = org.robolectric.Shadows.shadowOf((android.app.Application) ApplicationProvider.getApplicationContext());
+        org.robolectric.shadows.ShadowApplication shadowApp = (org.robolectric.shadows.ShadowApplication) org.robolectric.shadow.api.Shadow.extract((android.app.Application) ApplicationProvider.getApplicationContext());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             shadowApp.setSystemService(Context.GAME_SERVICE, mock(GameManager.class));
         } else {
@@ -61,7 +60,7 @@ public class ProfilesNavigationTest {
 
         // We only need a mock binder, not the real service
         com.limelight.computers.ComputerManagerService.ComputerManagerBinder binder = mock(com.limelight.computers.ComputerManagerService.ComputerManagerBinder.class);
-        org.robolectric.Shadows.shadowOf((android.app.Application) ctx)
+        ((org.robolectric.shadows.ShadowApplication) org.robolectric.shadow.api.Shadow.extract((android.app.Application) ctx))
                 .setComponentNameAndServiceForBindService(cn, binder);
 
         // Apply an AppCompat theme required by ProfilesActivity
@@ -79,7 +78,7 @@ public class ProfilesNavigationTest {
 
         btn.performClick();
 
-        Intent next = Shadows.shadowOf(pcView).getNextStartedActivity();
+        Intent next = ((org.robolectric.shadows.ShadowActivity) org.robolectric.shadow.api.Shadow.extract(pcView)).getNextStartedActivity();
         assertNotNull("ProfilesActivity should be launched", next);
         assertEquals(ProfilesActivity.class.getName(), next.getComponent().getClassName());
     }
@@ -99,7 +98,7 @@ public class ProfilesNavigationTest {
 
         btn.performClick();
 
-        Intent next = Shadows.shadowOf(appView).getNextStartedActivity();
+        Intent next = ((org.robolectric.shadows.ShadowActivity) org.robolectric.shadow.api.Shadow.extract(appView)).getNextStartedActivity();
         assertNotNull("ProfilesActivity should be launched from AppView", next);
         assertEquals(ProfilesActivity.class.getName(), next.getComponent().getClassName());
     }
