@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    ndkVersion "27.0.12077973"
+    ndkVersion "29.0.14206865"
 
     compileSdk = 36
 
@@ -9,10 +9,10 @@ android {
 
     defaultConfig {
         minSdk 21
-        targetSdk 34
+        targetSdk 36
 
-        versionName "20.2.6"
-        versionCode = 57
+        versionName "20.3.0"
+        versionCode = 58
 
         // Generate native debug symbols to allow Google Play to symbolicate our native crashes
         ndk.debugSymbolLevel = 'FULL'
@@ -22,6 +22,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        resValues = true
     }
 
     productFlavors {
@@ -64,8 +65,9 @@ android {
 
     compileOptions {
         encoding "UTF-8"
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
     }
 
     lint {
@@ -140,7 +142,7 @@ android {
             resValue "string", "app_label_game", "Artemis (Game)"
 
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -161,14 +163,21 @@ android {
     testOptions {
         unitTests.includeAndroidResources = true
     }
+
+    packaging {
+        resources {
+            // BouncyCastle includes duplicate LICENSE.md files
+            excludes += '/META-INF/*.md'
+        }
+    }
 }
 
 dependencies {
-    implementation 'org.bouncycastle:bcprov-jdk18on:1.81'
-    implementation 'org.bouncycastle:bcpkix-jdk18on:1.81'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.85.2'
+    implementation 'org.bouncycastle:bcpkix-jdk18on:1.85'
     implementation 'org.jcodec:jcodec:0.2.5'
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
-    implementation 'org.jmdns:jmdns:3.6.2'
+    implementation 'com.squareup.okhttp3:okhttp:5.5.0'
+    implementation 'org.jmdns:jmdns:3.6.3'
     implementation 'com.github.cgutman:ShieldControllerExtensions:1.0.1'
     implementation 'com.google.code.gson:gson:2.13.1'
     implementation 'androidx.annotation:annotation:1.9.1'
@@ -182,6 +191,8 @@ dependencies {
     implementation 'com.google.ai.edge.litert:litert:1.4.0'
     implementation 'com.google.ai.edge.litert:litert-gpu:1.4.0'
     implementation 'org.opencv:opencv:4.12.0'
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 
     // Unit test dependencies
     testImplementation 'junit:junit:4.13.2'
