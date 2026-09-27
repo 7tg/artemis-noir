@@ -153,6 +153,21 @@
         <item>left</item>
     </string-array>
 
+    <string-array name="touchpad_rotation_names">
+        <item>@string/touchpad_rotation_off</item>
+        <item>@string/touchpad_rotation_auto</item>
+        <item>90°</item>
+        <item>180°</item>
+        <item>270°</item>
+    </string-array>
+    <string-array name="touchpad_rotation_values" translatable="false">
+        <item>off</item>
+        <item>auto</item>
+        <item>90</item>
+        <item>180</item>
+        <item>270</item>
+    </string-array>
+
 
     <string-array name="keyboard_axi_names">
         <item>@string/keyboard_layout_set_1</item>

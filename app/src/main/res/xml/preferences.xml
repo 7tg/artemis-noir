@@ -408,6 +408,14 @@
             android:summary="@string/summary_checkbox_absolute_mouse_mode"
             android:title="@string/title_checkbox_absolute_mouse_mode"
             app:iconSpaceReserved="false" />
+        <ListPreference
+            android:defaultValue="off"
+            android:entries="@array/touchpad_rotation_names"
+            android:entryValues="@array/touchpad_rotation_values"
+            android:key="touchpad_rotation"
+            android:summary="@string/summary_touchpad_rotation"
+            android:title="@string/title_touchpad_rotation"
+            app:iconSpaceReserved="false" />
         <com.limelight.preferences.SeekBarPreference
             android:defaultValue="100"
             android:key="seekbar_trackpad_sensitivity_x"

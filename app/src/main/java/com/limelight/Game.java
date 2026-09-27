@@ -13,6 +13,7 @@ import com.limelight.binding.audio.AndroidAudioRenderer;
 import com.limelight.binding.input.ControllerHandler;
 import com.limelight.binding.input.GameInputDevice;
 import com.limelight.binding.input.KeyboardTranslator;
+import com.limelight.binding.input.MouseDeltaRotator;
 import com.limelight.binding.input.capture.InputCaptureManager;
 import com.limelight.binding.input.capture.InputCaptureProvider;
 import com.limelight.binding.input.touch.AbsoluteTouchContext;
@@ -353,6 +354,8 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
         // Read the stream preferences
         prefConfig = PreferenceConfiguration.readPreferences(this);
         tombstonePrefs = Game.this.getSharedPreferences("DecoderTombstone", 0);
+
+        updateDisplayRotationQuarters();
 
         if (prefConfig.fullScreen) {
             // Full-screen
@@ -1184,12 +1187,36 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
         }
     }
 
+    // Cached Surface.ROTATION_* value (0-3) used to rotate touchpad deltas in "auto" mode.
+    private int displayRotationQuarters;
+
+    private void updateDisplayRotationQuarters() {
+        Display display = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) ?
+                getDisplay() : getWindowManager().getDefaultDisplay();
+        displayRotationQuarters = (display != null) ? display.getRotation() : 0;
+    }
+
+    private int getTouchpadRotationQuarters() {
+        if (prefConfig.touchpadRotation == null) {
+            return 0;
+        }
+        switch (prefConfig.touchpadRotation) {
+            case "auto": return displayRotationQuarters;
+            case "90": return 1;
+            case "180": return 2;
+            case "270": return 3;
+            default: return 0;
+        }
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
         // Set requested orientation for possible new screen size
         setPreferredOrientationForActivity();
+
+        updateDisplayRotationQuarters();
 
         if (virtualController != null) {
             // Refresh layout of OSC for possible new screen size
@@ -2866,6 +2893,15 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
                     short deltaY = (short)inputCaptureProvider.getRelativeAxisY(event);
 
                     if (deltaX != 0 || deltaY != 0) {
+                        // Correct touchpads that report deltas in the wrong orientation frame
+                        // (e.g. Samsung Book Cover Keyboards on Tab S tablets)
+                        int rotationQuarters = getTouchpadRotationQuarters();
+                        if (rotationQuarters != 0) {
+                            short rotatedDeltaX = MouseDeltaRotator.rotatedX(rotationQuarters, deltaX, deltaY);
+                            deltaY = MouseDeltaRotator.rotatedY(rotationQuarters, deltaX, deltaY);
+                            deltaX = rotatedDeltaX;
+                        }
+
                         if (prefConfig.absoluteMouseMode) {
                             // NB: view may be null, but we can unconditionally use streamView because we don't need to adjust
                             // relative axis deltas for the position of the streamView within the parent's coordinate system.

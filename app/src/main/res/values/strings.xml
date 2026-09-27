@@ -255,6 +255,10 @@
     <string name="summary_checkbox_touchscreen_trackpad">If enabled, the touchscreen acts like a trackpad. If disabled, the touchscreen directly controls the mouse cursor.</string>
     <string name="title_checkbox_absolute_mouse_mode">Remote desktop mouse mode</string>
     <string name="summary_checkbox_absolute_mouse_mode">This can make mouse acceleration behave more naturally for remote desktop usage, but it is incompatible with many games.</string>
+    <string name="title_touchpad_rotation">Touchpad rotation fix</string>
+    <string name="touchpad_rotation_off">Off</string>
+    <string name="touchpad_rotation_auto">Auto (follow screen rotation)</string>
+    <string name="summary_touchpad_rotation">Rotates physical touchpad/mouse movement. Fixes touchpads that move the cursor sideways, such as Samsung Book Cover Keyboards. Try Auto first, then 90° or 270°.</string>
     <string name="title_checkbox_mouse_nav_buttons">Enable forward/back mouse buttons</string>
     <string name="summary_checkbox_mouse_nav_buttons">Enabling this option may break right clicking on some buggy devices</string>
 
