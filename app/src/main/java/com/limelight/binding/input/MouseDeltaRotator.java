@@ -11,21 +11,29 @@ package com.limelight.binding.input;
 public final class MouseDeltaRotator {
     private MouseDeltaRotator() {}
 
-    public static short rotatedX(int quarters, short dx, short dy) {
+    public static int rotatedX(int quarters, int dx, int dy) {
         switch (Math.floorMod(quarters, 4)) {
-            case 1: return (short) -dy;
-            case 2: return (short) -dx;
+            case 1: return -dy;
+            case 2: return -dx;
             case 3: return dy;
             default: return dx;
         }
     }
 
-    public static short rotatedY(int quarters, short dx, short dy) {
+    public static int rotatedY(int quarters, int dx, int dy) {
         switch (Math.floorMod(quarters, 4)) {
             case 1: return dx;
-            case 2: return (short) -dy;
-            case 3: return (short) -dx;
+            case 2: return -dy;
+            case 3: return -dx;
             default: return dy;
         }
+    }
+
+    public static short rotatedX(int quarters, short dx, short dy) {
+        return (short) rotatedX(quarters, (int) dx, (int) dy);
+    }
+
+    public static short rotatedY(int quarters, short dx, short dy) {
+        return (short) rotatedY(quarters, (int) dx, (int) dy);
     }
 }

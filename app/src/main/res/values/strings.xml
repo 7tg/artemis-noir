@@ -258,7 +258,7 @@
     <string name="title_touchpad_rotation">Touchpad rotation fix</string>
     <string name="touchpad_rotation_off">Off</string>
     <string name="touchpad_rotation_auto">Auto (follow screen rotation)</string>
-    <string name="summary_touchpad_rotation">Rotates physical touchpad/mouse movement. Fixes touchpads that move the cursor sideways, such as Samsung Book Cover Keyboards. Try Auto first, then 90° or 270°.</string>
+    <string name="summary_touchpad_rotation">Rotates physical touchpad/mouse movement, including two-finger scrolling. Fixes touchpads that move the cursor sideways, such as Samsung Book Cover Keyboards (Tab S9: use Auto, or 270° if Auto is wrong).</string>
     <string name="title_checkbox_mouse_nav_buttons">Enable forward/back mouse buttons</string>
     <string name="summary_checkbox_mouse_nav_buttons">Enabling this option may break right clicking on some buggy devices</string>
 

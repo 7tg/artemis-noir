@@ -817,7 +817,7 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
 
         // Initialize trackpad contexts
         for (int i = 0; i < trackpadContextMap.length; i++) {
-            trackpadContextMap[i] = new TrackpadContext(conn, i, prefConfig.trackpadSwapAxis, prefConfig.trackpadSensitivityX, prefConfig.trackpadSensitivityY);
+            trackpadContextMap[i] = new TrackpadContext(conn, i, prefConfig.trackpadSwapAxis, prefConfig.trackpadSensitivityX, prefConfig.trackpadSensitivityY, this::getTouchpadRotationQuarters);
         }
 
         if (Objects.equals(appUUID, NvApp.REMOTE_INPUT_UUID)) {
@@ -1201,7 +1201,11 @@ public class Game extends AppCompatActivity implements SurfaceHolder.Callback,
             return 0;
         }
         switch (prefConfig.touchpadRotation) {
-            case "auto": return displayRotationQuarters;
+            // Counter-rotate by the display rotation: a touchpad reporting in the
+            // device's natural frame on a display at ROTATION_90 needs the inverse
+            // (270°) correction, which is the swap-axes-and-invert-Y transform that
+            // Samsung Book Cover Keyboards need in landscape.
+            case "auto": return (4 - displayRotationQuarters) % 4;
             case "90": return 1;
             case "180": return 2;
             case "270": return 3;

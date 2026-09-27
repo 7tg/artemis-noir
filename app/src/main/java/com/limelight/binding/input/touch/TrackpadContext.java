@@ -4,10 +4,20 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.limelight.LimeLog;
+import com.limelight.binding.input.MouseDeltaRotator;
 import com.limelight.nvstream.NvConnection;
 import com.limelight.nvstream.input.MouseButtonPacket;
 
 public class TrackpadContext implements TouchContext {
+
+    /**
+     * Supplies the number of 90-degree turns to apply to trackpad deltas.
+     * Queried per move event so "auto" mode can follow display rotation.
+     */
+    public interface RotationProvider {
+        int quarters();
+    }
+
     private double pendingDeltaX = 0;
     private double pendingDeltaY = 0;
     private int lastTouchX = 0;
@@ -38,6 +48,7 @@ public class TrackpadContext implements TouchContext {
     private boolean swapAxis = false;
     private float sensitivityX = 1;
     private float sensitivityY = 1;
+    private RotationProvider rotationProvider;
 
     private static final int TAP_MOVEMENT_THRESHOLD = 30;
     private static final int TAP_TIME_THRESHOLD = 230;
@@ -63,6 +74,12 @@ public class TrackpadContext implements TouchContext {
         this.swapAxis = swapAxis;
         this.sensitivityX = (float) sensitivityX / 100;
         this.sensitivityY = (float) sensitivityY / 100;
+    }
+
+    public TrackpadContext(NvConnection conn, int actionIndex, boolean swapAxis, int sensitivityX, int sensitivityY,
+                           RotationProvider rotationProvider) {
+        this(conn, actionIndex, swapAxis, sensitivityX, sensitivityY);
+        this.rotationProvider = rotationProvider;
     }
 
     private final Runnable scrollTransitionRunnable = new Runnable() {
@@ -320,6 +337,16 @@ public class TrackpadContext implements TouchContext {
             int rawDeltaX = eventX - lastTouchX;
             int rawDeltaY = eventY - lastTouchY;
             int absDeltaX, absDeltaY;
+
+            // Correct trackpads that report motion in the wrong orientation frame
+            // (e.g. Samsung Book Cover Keyboards on Tab S tablets). Applying this
+            // to the raw deltas also corrects two-finger scrolling and flicks.
+            int rotationQuarters = (rotationProvider != null) ? rotationProvider.quarters() : 0;
+            if (rotationQuarters != 0) {
+                int rotatedRawX = MouseDeltaRotator.rotatedX(rotationQuarters, rawDeltaX, rawDeltaY);
+                rawDeltaY = MouseDeltaRotator.rotatedY(rotationQuarters, rawDeltaX, rawDeltaY);
+                rawDeltaX = rotatedRawX;
+            }
 
             double magnitude = Math.sqrt(rawDeltaX * rawDeltaX + rawDeltaY * rawDeltaY);
             double precisionMultiplier = Math.cbrt(magnitude / ACCELERATION_THRESHOLD);
